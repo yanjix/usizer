@@ -19,9 +19,9 @@
 
 #ifndef __PRACTICALSOCKET_INCLUDED__
 #define __PRACTICALSOCKET_INCLUDED__
-#pragma warning( disable : 4290 )
-#include <string>            // For string
-#include <exception>         // For exception class
+#pragma warning(disable : 4290)
+#include <exception>  // For exception class
+#include <string>     // For string
 
 using namespace std;
 
@@ -29,7 +29,7 @@ using namespace std;
  *   Signals a problem with the execution of a socket call.
  */
 class SocketException : public exception {
-public:
+ public:
   /**
    *   Construct a SocketException with a explanatory message.
    *   @param message explanatory message
@@ -49,7 +49,7 @@ public:
    */
   const char *what() const throw();
 
-private:
+ private:
   string userMessage;  // Exception message
 };
 
@@ -57,7 +57,7 @@ private:
  *   Base class representing basic communication endpoint
  */
 class Socket {
-public:
+ public:
   /**
    *   Close and deallocate this socket
    */
@@ -87,14 +87,15 @@ public:
 
   /**
    *   Set the local port to the specified port and the local address
-   *   to the specified address.  If you omit the port, a random port 
+   *   to the specified address.  If you omit the port, a random port
    *   will be selected.
    *   @param localAddress local address
    *   @param localPort local port
    *   @exception SocketException thrown if setting local port or address fails
    */
-  void setLocalAddressAndPort(const string &localAddress, 
-    unsigned short localPort = 0) throw(SocketException);
+  void setLocalAddressAndPort(
+      const string &localAddress,
+      unsigned short localPort = 0) throw(SocketException);
 
   /**
    *   If WinSock, unload the WinSock DLLs; otherwise do nothing.  We ignore
@@ -102,7 +103,7 @@ public:
    *   completeness.  If you are running on Windows and you are concerned
    *   about DLL resource consumption, call this after you are done with all
    *   Socket instances.  If you execute this on Windows while some instance of
-   *   Socket exists, you are toast.  For portability of client code, this is 
+   *   Socket exists, you are toast.  For portability of client code, this is
    *   an empty function on non-Windows platforms so you can always include it.
    *   @param buffer buffer to receive the data
    *   @param bufferLen maximum number of bytes to read into buffer
@@ -120,13 +121,13 @@ public:
   static unsigned short resolveService(const string &service,
                                        const string &protocol = "tcp");
 
-private:
+ private:
   // Prevent the user from trying to use value semantics on this object
   Socket(const Socket &sock);
   void operator=(const Socket &sock);
 
-protected:
-  int sockDesc;              // Socket descriptor
+ protected:
+  int sockDesc;  // Socket descriptor
   Socket(int type, int protocol) throw(SocketException);
   Socket(int sockDesc);
 };
@@ -135,7 +136,7 @@ protected:
  *   Socket which is able to connect, send, and receive
  */
 class CommunicatingSocket : public Socket {
-public:
+ public:
   /**
    *   Establish a socket connection with the given foreign
    *   address and port
@@ -143,8 +144,8 @@ public:
    *   @param foreignPort foreign port
    *   @exception SocketException thrown if unable to establish connection
    */
-  void connect(const string &foreignAddress, unsigned short foreignPort)
-    throw(SocketException);
+  void connect(const string &foreignAddress,
+               unsigned short foreignPort) throw(SocketException);
 
   /**
    *   Write the given buffer to this socket.  Call connect() before
@@ -179,7 +180,7 @@ public:
    */
   unsigned short getForeignPort() throw(SocketException);
 
-protected:
+ protected:
   CommunicatingSocket(int type, int protocol) throw(SocketException);
   CommunicatingSocket(int newConnSD);
 };
@@ -188,7 +189,7 @@ protected:
  *   TCP socket for communication with other TCP sockets
  */
 class TCPSocket : public CommunicatingSocket {
-public:
+ public:
   /**
    *   Construct a TCP socket with no connection
    *   @exception SocketException thrown if unable to create TCP socket
@@ -202,10 +203,10 @@ public:
    *   @param foreignPort foreign port
    *   @exception SocketException thrown if unable to create TCP socket
    */
-  TCPSocket(const string &foreignAddress, unsigned short foreignPort) 
-      throw(SocketException);
+  TCPSocket(const string &foreignAddress,
+            unsigned short foreignPort) throw(SocketException);
 
-private:
+ private:
   // Access for TCPServerSocket::accept() connection creation
   friend class TCPServerSocket;
   TCPSocket(int newConnSD);
@@ -215,47 +216,48 @@ private:
  *   TCP socket class for servers
  */
 class TCPServerSocket : public Socket {
-public:
+ public:
   /**
    *   Construct a TCP socket for use with a server, accepting connections
    *   on the specified port on any interface
    *   @param localPort local port of server socket, a value of zero will
    *                   give a system-assigned unused port
-   *   @param queueLen maximum queue length for outstanding 
+   *   @param queueLen maximum queue length for outstanding
    *                   connection requests (default 5)
    *   @exception SocketException thrown if unable to create TCP server socket
    */
-  TCPServerSocket(unsigned short localPort, int queueLen = 5) 
-      throw(SocketException);
+  TCPServerSocket(unsigned short localPort,
+                  int queueLen = 5) throw(SocketException);
 
   /**
    *   Construct a TCP socket for use with a server, accepting connections
    *   on the specified port on the interface specified by the given address
    *   @param localAddress local interface (address) of server socket
    *   @param localPort local port of server socket
-   *   @param queueLen maximum queue length for outstanding 
+   *   @param queueLen maximum queue length for outstanding
    *                   connection requests (default 5)
    *   @exception SocketException thrown if unable to create TCP server socket
    */
   TCPServerSocket(const string &localAddress, unsigned short localPort,
-      int queueLen = 5) throw(SocketException);
+                  int queueLen = 5) throw(SocketException);
 
   /**
    *   Blocks until a new connection is established on this socket or error
    *   @return new connection socket
-   *   @exception SocketException thrown if attempt to accept a new connection fails
+   *   @exception SocketException thrown if attempt to accept a new connection
+   * fails
    */
   TCPSocket *accept() throw(SocketException);
 
-private:
+ private:
   void setListen(int queueLen) throw(SocketException);
 };
 
 /**
-  *   UDP socket class
-  */
+ *   UDP socket class
+ */
 class UDPSocket : public CommunicatingSocket {
-public:
+ public:
   /**
    *   Construct a UDP socket
    *   @exception SocketException thrown if unable to create UDP socket
@@ -275,8 +277,8 @@ public:
    *   @param localPort local port
    *   @exception SocketException thrown if unable to create UDP socket
    */
-  UDPSocket(const string &localAddress, unsigned short localPort) 
-      throw(SocketException);
+  UDPSocket(const string &localAddress,
+            unsigned short localPort) throw(SocketException);
 
   /**
    *   Unset foreign address and port
@@ -296,7 +298,7 @@ public:
    *   @exception SocketException thrown if unable to send datagram
    */
   void sendTo(const void *buffer, int bufferLen, const string &foreignAddress,
-            unsigned short foreignPort) throw(SocketException);
+              unsigned short foreignPort) throw(SocketException);
 
   /**
    *   Read read up to bufferLen bytes data from this socket.  The given buffer
@@ -308,7 +310,7 @@ public:
    *   @return number of bytes received and -1 for error
    *   @exception SocketException thrown if unable to receive datagram
    */
-  int recvFrom(void *buffer, int bufferLen, string &sourceAddress, 
+  int recvFrom(void *buffer, int bufferLen, string &sourceAddress,
                unsigned short &sourcePort) throw(SocketException);
 
   /**
@@ -332,7 +334,7 @@ public:
    */
   void leaveGroup(const string &multicastGroup) throw(SocketException);
 
-private:
+ private:
   void setBroadcast();
 };
 

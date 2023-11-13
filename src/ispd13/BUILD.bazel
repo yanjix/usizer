@@ -23,9 +23,20 @@ cc_library(
 )
 
 cc_library(
-    name = "step_watch",
-    hdrs = ["Stepwatch.h"],
-    deps = [":stop_watch"],
+    name = "fmath",
+    hdrs = ["fmath.hpp"],
+)
+
+cc_library(
+    name = "newton_raphson",
+    srcs = ["NewtonRaphson.cpp"],
+    hdrs = ["NewtonRaphson.h"],
+)
+
+cc_library(
+    name = "practical_socket",
+    srcs = ["PracticalSocket.cpp"],
+    hdrs = ["PracticalSocket.h"],
 )
 
 cc_library(
@@ -37,12 +48,15 @@ cc_library(
     ],
     hdrs = [
         "Circuit.h",
+        "EdgeArray.h",
+        "RCTree.h",
         "Vcell.h",
         "global.h",
     ],
     deps = [
+        ":fmath",
+        ":newton_raphson",
         ":parser_helper",
-        ":step_watch",
         ":stop_watch",
         ":timer_interface",
     ],
