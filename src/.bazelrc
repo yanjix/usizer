@@ -1,0 +1,24 @@
+# By default, build in C++ 17 mode, with various extra flags
+build --cxxopt="-std=c++17"
+build --cxxopt="-Wno-sign-compare"
+build --cxxopt="-Wno-range-loop-construct"
+
+build --host_cxxopt="-std=c++17"
+build --host_cxxopt="-Wno-sign-compare"
+build --host_cxxopt="-Wno-range-loop-construct"
+
+# Print command lines for build commands.
+# build --subcommands=pretty_print
+
+# Print test logs for failed tests.
+test --test_output=errors
+
+# Put user-specific options in .bazelrc.user
+try-import %workspace%/.bazelrc.user
+
+# Optimization level
+build:opt --cxxopt="-O3"
+
+# Default to clang toolchain
+build --repo_env=CC=clang++
+

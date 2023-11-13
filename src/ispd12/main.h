@@ -7,19 +7,20 @@
  *
  */
 
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <time.h>
+#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
-#include <iomanip>
-#include <float.h>
-#include <limits>
-#include <cassert>
+#include <time.h>
+
 #include <algorithm>
+#include <cassert>
+#include <cstdlib>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <string>
 
 using namespace std;
 
@@ -39,4 +40,3 @@ void flowFlach(string benchmarkName, string dirRoot);
 void flowJohann(string benchmarkName, string dirRoot);
 
 void report(string benchmarkName, string dirRoot, string solutionFile);
-

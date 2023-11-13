@@ -1,0 +1,62 @@
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_proto_library")
+
+package(
+    default_visibility = ["//visibility:public"],
+    features = ["header_modules"],
+)
+
+cc_library(
+    name = "parser_helper",
+    srcs = ["parser_helper.cpp"],
+    hdrs = ["parser_helper.h"],
+)
+
+cc_library(
+    name = "timer_interface",
+    srcs = ["timer_interface.cpp"],
+    hdrs = ["timer_interface.h"],
+)
+
+cc_library(
+    name = "stop_watch",
+    hdrs = ["Stopwatch.h"],
+)
+
+cc_library(
+    name = "step_watch",
+    hdrs = ["Stepwatch.h"],
+    deps = [":stop_watch"],
+)
+
+cc_library(
+    name = "circuit",
+    srcs = [
+        "Circuit.cpp",
+        "Vcell.cpp",
+        "global.cpp",
+    ],
+    hdrs = [
+        "Circuit.h",
+        "Vcell.h",
+        "global.h",
+    ],
+    deps = [
+        ":parser_helper",
+        ":step_watch",
+        ":stop_watch",
+        ":timer_interface",
+    ],
+)
+
+cc_binary(
+    name = "main",
+    srcs = [
+        "main.cpp",
+        "main.h",
+    ],
+    deps = [
+        ":circuit",
+        ":parser_helper",
+        ":stop_watch",
+    ],
+)
